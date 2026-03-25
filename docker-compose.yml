@@ -8,23 +8,17 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # Change this to postgres URL for production
       - DATABASE_URL=sqlite:///./sql_app.db
       - SECRET_KEY=super_secret_production_key_change_me
-    volumes:
-      - backend_data:/app
+    # 不再挂载 volume 到 /app，避免旧代码覆盖新镜像
 
   frontend:
     build: 
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        # Default fallback, can be overridden during build
-        - VITE_API_URL=http://localhost:8000
+        - VITE_API_URL=http://111.228.7.39:8000
     ports:
       - "3080:80"
     depends_on:
       - backend
-
-volumes:
-  backend_data:
