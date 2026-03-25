@@ -18,7 +18,7 @@ function Login({ onLogin }) {
       onLogin(data.access_token);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Username or password incorrect');
+      setError(err.response?.data?.detail || '用户名或密码错误');
     } finally {
       setLoading(false);
     }
@@ -28,8 +28,8 @@ function Login({ onLogin }) {
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-xl ring-1 ring-slate-900/5">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Quadrant Todo</h2>
-          <p className="text-sm text-slate-500 mt-2">Sign in to manage your tasks effectively</p>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900">四象限云同步待办</h2>
+          <p className="text-sm text-slate-500 mt-2">登录以高效管理您的任务</p>
         </div>
         
         {error && (
@@ -40,25 +40,25 @@ function Login({ onLogin }) {
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700">Username</label>
+            <label className="block text-sm font-medium text-slate-700">用户名</label>
             <input
               type="text"
               required
               value={username}
               onChange={e => setUsername(e.target.value)}
               className="mt-2 block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
-              placeholder="Enter your username"
+              placeholder="请输入用户名"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700">Password</label>
+            <label className="block text-sm font-medium text-slate-700">密码</label>
             <input
               type="password"
               required
               value={password}
               onChange={e => setPassword(e.target.value)}
               className="mt-2 block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:text-sm"
-              placeholder="Enter your password"
+              placeholder="请输入密码"
             />
           </div>
           <button
@@ -66,14 +66,14 @@ function Login({ onLogin }) {
             disabled={loading}
             className="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 transition-colors"
           >
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? '登录中...' : '登录'}
           </button>
         </form>
         
         <p className="mt-8 text-center text-sm text-slate-500">
-          Don't have an account?{' '}
+          还没有账号？{' '}
           <Link to="/register" className="font-semibold leading-6 text-blue-600 hover:text-blue-500">
-            Sign up now
+            立即注册
           </Link>
         </p>
       </div>

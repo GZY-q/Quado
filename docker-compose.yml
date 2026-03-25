@@ -22,7 +22,7 @@ services:
         # Default fallback, can be overridden during build
         - VITE_API_URL=http://localhost:8000
     ports:
-      - "80:80"
+      - "3080:80"
     depends_on:
       - backend
 
