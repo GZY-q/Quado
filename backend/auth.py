@@ -12,13 +12,19 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "a_very_secret_key_for_development_onl
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60 # 30 days
 
+import hashlib
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def get_password_hash(password: str):
+    # Pre-hash the password with SHA256 to handle the 72-byte bcrypt limit
+    password_sha256 = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    return pwd_context.hash(password_sha256)
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
+def verify_password(plain_password: str, hashed_password: str):
+    # Pre-hash the plain password with SHA256 before verification
+    password_sha256 = hashlib.sha256(plain_password.encode("utf-8")).hexdigest()
+    return pwd_context.verify(password_sha256, hashed_password)
 
 def get_user(db, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
