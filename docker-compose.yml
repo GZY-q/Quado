@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: quado_root_2026
+      MYSQL_DATABASE: quado
+      MYSQL_USER: quado_user
+      MYSQL_PASSWORD: quado_pass_2026
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   backend:
     build: 
       context: ./backend
@@ -8,9 +27,12 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=sqlite:///./sql_app.db
+      - DATABASE_URL=mysql+pymysql://quado_user:quado_pass_2026@db:3306/quado?charset=utf8mb4
       - SECRET_KEY=super_secret_production_key_change_me
-    # 不再挂载 volume 到 /app，避免旧代码覆盖新镜像
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
 
   frontend:
     build: 
@@ -22,3 +44,6 @@ services:
       - "3080:80"
     depends_on:
       - backend
+
+volumes:
+  mysql_data:
