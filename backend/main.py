@@ -1,10 +1,12 @@
 import os
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from jose import JWTError, jwt
 from fastapi.middleware.cors import CORSMiddleware
+import traceback
 
 import models, schemas, auth, database
 from auth import SECRET_KEY, ALGORITHM
@@ -20,6 +22,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 全局异常捕获：确保 500 错误也返回真正的报错信息
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    tb = traceback.format_exc()
+    print(f"[ERROR] {request.method} {request.url}\n{tb}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": str(exc)},
+    )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
